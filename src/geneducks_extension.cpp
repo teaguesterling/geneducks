@@ -1,6 +1,6 @@
 #define DUCKDB_EXTENSION_MAIN
 
-#include "quack_extension.hpp"
+#include "geneducks_extension.hpp"
 #include "duckdb.hpp"
 #include "duckdb/common/exception.hpp"
 #include "duckdb/common/string_util.hpp"
@@ -10,6 +10,7 @@
 
 // OpenSSL linked through vcpkg
 #include <openssl/opensslv.h>
+#include <htslib/synced_bcf_reader.h>
 
 namespace duckdb {
 
@@ -44,14 +45,14 @@ static void LoadInternal(DatabaseInstance &instance) {
     ExtensionUtil::RegisterFunction(instance, quack_openssl_version_scalar_function);
 }
 
-void QuackExtension::Load(DuckDB &db) {
+void GeneducksExtension::Load(DuckDB &db) {
 	LoadInternal(*db.instance);
 }
-std::string QuackExtension::Name() {
+std::string GeneducksExtension::Name() {
 	return "quack";
 }
 
-std::string QuackExtension::Version() const {
+std::string GeneducksExtension::Version() const {
 #ifdef EXT_VERSION_QUACK
 	return EXT_VERSION_QUACK;
 #else
@@ -65,7 +66,7 @@ extern "C" {
 
 DUCKDB_EXTENSION_API void quack_init(duckdb::DatabaseInstance &db) {
     duckdb::DuckDB db_wrapper(db);
-    db_wrapper.LoadExtension<duckdb::QuackExtension>();
+    db_wrapper.LoadExtension<duckdb::GeneducksExtension>();
 }
 
 DUCKDB_EXTENSION_API const char *quack_version() {
